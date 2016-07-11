@@ -1,0 +1,29 @@
+{
+  "version": "0.0.0-prerelease",
+  "devDependencies": {
+    "abstract-blob-store": "^3.2.0",
+    "dev-null": "^0.1.1",
+    "level-logs": "^1.1.0",
+    "memdown": "^1.2.0",
+    "ndjson": "^1.4.3",
+    "pino": "^2.7.3",
+    "reconnect-core": "^1.3.0",
+    "sha256": "^0.2.0",
+    "standard": "^7.1.2",
+    "tape": "^4.6.0",
+    "tcp-log-client": "^4.0.0",
+    "tcp-log-server": "^6.0.0",
+    "through2-filter": "^2.0.0"
+  },
+  "dependencies": {
+    "level-batch-stream": "^1.3.1",
+    "leveldown": "^1.4.6",
+    "levelup": "^1.3.2",
+    "migrate-versioned-log": "^1.0.0",
+    "through2": "^2.0.1",
+    "uuid": "^2.0.2"
+  },
+  "scripts": {
+    "test": "node test.js"
+  }
+}
