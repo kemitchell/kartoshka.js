@@ -21,7 +21,7 @@
     "standard": "^7.1.2",
     "tape": "^4.6.0",
     "tcp-log-client": "^4.0.0",
-    "tcp-log-server": "^6.0.0",
+    "tcp-log-server": "^7.0.0",
     "through2-filter": "^2.0.0"
   },
   "scripts": {
