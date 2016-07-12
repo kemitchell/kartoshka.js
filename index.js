@@ -63,6 +63,7 @@ module.exports = function (serverLog, level, dataLog) {
             response.end()
           }
         } else {
+          response.statusCode = 200 // OK
           response.setHeader('Content-Type', 'application/json')
           response.end(value)
         }
