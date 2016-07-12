@@ -1,6 +1,7 @@
 var LevelBatchStream = require('level-batch-stream')
 var migrateVersionedLog = require('migrate-versioned-log')
 var migrations = require('./migrations')
+var pump = require('pump')
 var through2 = require('through2')
 var entryToLevelUPBatch = require('./transform')
 var uuid = require('uuid').v4
@@ -8,20 +9,22 @@ var uuid = require('uuid').v4
 var version = require('./package.json').version
 
 module.exports = function (serverLog, level, dataLog) {
-  dataLog.readStream
-  .pipe(through2.obj(function pullOutVersion (chunk, _, done) {
-    var entry = chunk.entry
-    var version = entry.version
-    delete entry.version
-    done(null, {index: chunk.index, version: version, entry: entry})
-  }))
-  .pipe(migrateVersionedLog(migrations))
-  .pipe(through2.obj(function logMigrated (chunk, _, done) {
-    serverLog.info({event: 'migrated'}, chunk)
-    done(null, chunk.entry)
-  }))
-  .pipe(through2.obj(entryToLevelUPBatch))
-  .pipe(new LevelBatchStream(level))
+  pump(
+    dataLog.readStream,
+    through2.obj(function pullOutVersion (chunk, _, done) {
+      var entry = chunk.entry
+      var version = entry.version
+      delete entry.version
+      done(null, {index: chunk.index, version: version, entry: entry})
+    }),
+    migrateVersionedLog(migrations),
+    through2.obj(function logMigrated (chunk, _, done) {
+      serverLog.info({event: 'migrated'}, chunk)
+      done(null, chunk.entry)
+    }),
+    through2.obj(entryToLevelUPBatch),
+    new LevelBatchStream(level)
+  )
 
   return function (request, response) {
     request.log = serverLog.child({request: uuid()})
